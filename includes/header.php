@@ -40,10 +40,7 @@ $site = config('site');
                     </li>
                 <?php endforeach; ?>
             </ul>
-            <div class="site-nav-actions">
-                <a class="button button-small button-outline" href="<?= e(site_url('admin/login.php')) ?>">Sign In</a>
-                <a class="button button-small button-primary" href="<?= e(site_url('contact.php')) ?>">Get a Quote</a>
-            </div>
+            <a class="button button-small button-primary" href="<?= e(site_url('contact.php')) ?>">Get a Quote</a>
         </nav>
     </div>
 </header>

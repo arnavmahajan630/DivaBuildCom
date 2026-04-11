@@ -110,39 +110,11 @@ $teamMembers = [
     ['name' => 'Vikram Singh', 'role' => 'Site Supervisor', 'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuBMpi50HVwEQjClsIKCZHH6fyAlAcs29VhxaQA6IlwpumSbHE_wYZIpYBgWTsea-O8wkhqHkjcTVuwB0oZ9Vetve5nPpOMtJe-_djj7PrpqqiT_ejKtJDMtnF8aN8_QEyaiG1ogaW356k8hO-dJBZE7gBzWVp55Ee8sKXbU__yJ01SFxkaUrgy_dwUnUZXgxr6JaZuL_YcMzVXTreIK0vjD7hhPc6CR_EtDvTfFsN17zndqbEHtTylklIw3CN48xY83aO73cj3diZBk'],
 ];
 
-$legacyOpenings = [
-    [
-        'title' => 'Site Engineer',
-        'location' => 'Suburban Mumbai',
-        'experience' => '1-3 Years',
-        'type' => 'Full-Time',
-        'summary' => 'Drive site coordination, measurement checks, and execution quality across active Mumbai projects.',
-        'sort_order' => 1,
-    ],
-    [
-        'title' => 'Project Manager',
-        'location' => 'Mumbai',
-        'experience' => '3-5 Years',
-        'type' => 'Full-Time',
-        'summary' => 'Own project planning, reporting, contractor alignment, and milestone delivery for premium builds.',
-        'sort_order' => 2,
-    ],
-    [
-        'title' => 'Interior Designer',
-        'location' => 'Mumbai',
-        'experience' => '1-3 Years',
-        'type' => 'Full-Time',
-        'summary' => 'Translate client goals into refined interior concepts with practical coordination for site execution.',
-        'sort_order' => 3,
-    ],
-    [
-        'title' => 'Electrical Technician',
-        'location' => 'Suburban Mumbai',
-        'experience' => '1-2 Years',
-        'type' => 'Full-Time',
-        'summary' => 'Support safe and reliable electrical installation work with disciplined on-site execution standards.',
-        'sort_order' => 4,
-    ],
+$openings = [
+    ['title' => 'Site Engineer', 'location' => 'Suburban Mumbai', 'experience' => '1-3 Years', 'type' => 'Full-Time'],
+    ['title' => 'Project Manager', 'location' => 'Mumbai', 'experience' => '3-5 Years', 'type' => 'Full-Time'],
+    ['title' => 'Interior Designer', 'location' => 'Mumbai', 'experience' => '1-3 Years', 'type' => 'Full-Time'],
+    ['title' => 'Electrical Technician', 'location' => 'Suburban Mumbai', 'experience' => '1-2 Years', 'type' => 'Full-Time'],
 ];
 
 $benefits = [
@@ -173,8 +145,3 @@ $contactGallery = [
     'https://lh3.googleusercontent.com/aida-public/AB6AXuBL49Gd4WBojvPOWBsHBFznuVncWuFcGj1k7A7Oj0JhkPFoj1nfpaEFG4SXxnookXpZSp19y2rf-KeF0-LWdyYxSAcBfjotBhDKtHHyLmcTPGJe4jtyR3KS0tqil_pa46S4dA-0o8KFt0XJ6ItgjcZusbpAsVolLwd0Klg8fF2Pv4W2lrkgNmW8qUqkKXF3J-m5Us1fQ5U_L9Hn_DQr5tE66jghoI2p5mC2h0IbSifkLfp84VNIMv-cZnwYAL-i2OKrUM7UGOFilsAg',
     'https://lh3.googleusercontent.com/aida-public/AB6AXuC0u-0gBsumum7Q9wSnMWmyYLKZjRcsLgh6pg0mrzaXZhMGiuY1rqTT_Mej7ATjny0G1lBlS2iEku6tdo0JHcRc9RlFZxFc1e5X9rk793kwoqcQ3eItBsXM5QMPPCQvWSvKOcNjS-e-TNZox3oUQsmkGLMp3e4xDjfB4t6Bziu9s5_EEE1qMeYreMAdbuq2xakhJudtA-vV9SafsB04HPOb2g-cCSkovk0lLqP9MiX06BRPOGvOV9b9GfXKYD9uo-51kNiPbo-5-UUj',
 ];
-
-function legacy_openings(): array
-{
-    return $GLOBALS['legacyOpenings'] ?? [];
-}

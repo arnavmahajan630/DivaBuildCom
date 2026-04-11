@@ -36,9 +36,4 @@ return [
             'application/octet-stream',
         ],
     ],
-    'admin' => [
-        'identity' => 'admin@divabuildcom.local',
-        'password_hash' => '$2y$10$nfZBdmtvnb6UC58wp1WvNOoaIftUqXPVVj9NIjNRCDOouUjNsdkb2',
-        'display_name' => 'Diva Buildcom Admin',
-    ],
 ];
