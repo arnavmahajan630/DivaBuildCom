@@ -8,10 +8,8 @@ $pageDescription = 'Apply for careers at Diva Buildcom and submit your professio
 
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/data.php';
-require_once __DIR__ . '/includes/admin.php';
 
 $applicationFlash = get_flash('application');
-$openings = fetch_active_jobs();
 
 require __DIR__ . '/includes/header.php';
 ?>
@@ -53,25 +51,15 @@ require __DIR__ . '/includes/header.php';
             <p>Current opportunities for professionals ready to contribute on projects across suburban Mumbai.</p>
         </div>
         <div class="jobs-grid">
-            <?php if ($openings === []): ?>
+            <?php foreach ($openings as $opening): ?>
                 <article class="job-card" data-reveal>
                     <div>
-                        <h3>No active openings right now</h3>
-                        <p>We still welcome strong profiles. Submit your application and we will review it for upcoming roles.</p>
+                        <h3><?= e($opening['title']) ?></h3>
+                        <p><?= e($opening['location']) ?> • <?= e($opening['experience']) ?></p>
                     </div>
-                    <span class="job-badge">General</span>
+                    <span class="job-badge"><?= e($opening['type']) ?></span>
                 </article>
-            <?php else: ?>
-                <?php foreach ($openings as $opening): ?>
-                    <article class="job-card" data-reveal>
-                        <div>
-                            <h3><?= e($opening['title']) ?></h3>
-                            <p><?= e($opening['location']) ?> • <?= e($opening['experience']) ?></p>
-                        </div>
-                        <span class="job-badge"><?= e($opening['employment_type'] ?? $opening['type']) ?></span>
-                    </article>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -135,9 +123,8 @@ require __DIR__ . '/includes/header.php';
                         <select id="app_position" name="target_position">
                             <option value="">Select Position</option>
                             <?php foreach ($openings as $opening): ?>
-                                <?php $jobTitle = $opening['title']; ?>
-                                <option value="<?= e($jobTitle) ?>" <?= old_input($applicationFlash, 'target_position') === $jobTitle ? 'selected' : '' ?>>
-                                    <?= e($jobTitle) ?>
+                                <option value="<?= e($opening['title']) ?>" <?= old_input($applicationFlash, 'target_position') === $opening['title'] ? 'selected' : '' ?>>
+                                    <?= e($opening['title']) ?>
                                 </option>
                             <?php endforeach; ?>
                             <option value="Other" <?= old_input($applicationFlash, 'target_position') === 'Other' ? 'selected' : '' ?>>Other</option>
