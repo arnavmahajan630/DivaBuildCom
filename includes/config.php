@@ -22,6 +22,11 @@ return [
         'pass' => '',
         'charset' => 'utf8mb4',
     ],
+    'admin' => [
+        'identity' => 'admin@divabuildcom.local',
+        'password_hash' => '$2y$10$tPdvPbNkzWeZCFPvex6sEeRUoHisxY8wJrGdLD1Ka6napRIjEybN2',
+        'display_name' => 'Admin',
+    ],
     'uploads' => [
         'resume_dir' => dirname(__DIR__) . '/assets/uploads/resumes',
         'resume_web_dir' => 'assets/uploads/resumes',
