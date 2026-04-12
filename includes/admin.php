@@ -26,9 +26,10 @@ function admin_config(): array
 function admin_nav_items(): array
 {
     return [
-        ['label' => 'Dashboard', 'href' => admin_url('index.php'), 'page' => 'admin_dashboard'],
-        ['label' => 'Job Listings', 'href' => admin_url('jobs.php'), 'page' => 'admin_jobs'],
-        ['label' => 'Applications', 'href' => admin_url('applications.php'), 'page' => 'admin_applications'],
+        ['label' => 'Dashboard', 'href' => admin_url('index.php'), 'page' => 'admin_dashboard', 'icon' => 'dashboard'],
+        ['label' => 'Career Applications', 'href' => admin_url('applications.php'), 'page' => 'admin_applications', 'icon' => 'description'],
+        ['label' => 'Job Listings', 'href' => admin_url('jobs.php'), 'page' => 'admin_jobs', 'icon' => 'list_alt'],
+        ['label' => 'Add Job Post', 'href' => admin_url('jobs.php?create=1'), 'page' => '', 'icon' => 'add_box'],
     ];
 }
 
@@ -383,4 +384,115 @@ function admin_status_class(string $status): string
         'reviewing' => 'is-warning',
         default => 'is-neutral',
     };
+}
+
+function admin_badge_class(string $status): string
+{
+    return match ($status) {
+        'pending' => 'admin-badge-pending',
+        'reviewing' => 'admin-badge-reviewing',
+        'shortlisted' => 'admin-badge-shortlisted',
+        'rejected' => 'admin-badge-rejected',
+        'hired' => 'admin-badge-hired',
+        default => 'admin-badge-pending',
+    };
+}
+
+function applicant_initials(string $name): string
+{
+    $parts = preg_split('/\s+/', trim($name));
+    if ($parts === false || $parts === []) {
+        return '??';
+    }
+    $first = mb_strtoupper(mb_substr($parts[0], 0, 1));
+    $last = count($parts) > 1 ? mb_strtoupper(mb_substr(end($parts), 0, 1)) : '';
+    return $first . $last;
+}
+
+function fetch_job_stats(): array
+{
+    $defaults = [
+        'active_postings' => 0,
+        'total_applicants' => 0,
+        'urgent_hires' => 0,
+        'avg_time_to_fill' => 'N/A',
+    ];
+
+    if (jobs_feature_ready()) {
+        $defaults['active_postings'] = (int) db()->query('SELECT COUNT(*) FROM jobs WHERE is_active = 1')->fetchColumn();
+    }
+
+    if (applicants_feature_ready()) {
+        $defaults['total_applicants'] = (int) db()->query('SELECT COUNT(*) FROM applicants')->fetchColumn();
+    }
+
+    return $defaults;
+}
+
+function fetch_monthly_application_counts(): array
+{
+    if (!applicants_feature_ready()) {
+        return [];
+    }
+
+    $stmt = db()->query(
+        "SELECT DATE_FORMAT(created_at, '%b') AS month_label,
+                COUNT(*) AS total
+         FROM applicants
+         WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+         GROUP BY MONTH(created_at), month_label
+         ORDER BY MIN(created_at) ASC
+         LIMIT 6"
+    );
+
+    return $stmt->fetchAll() ?: [];
+}
+
+function fetch_applications_paginated(array $filters = [], int $page = 1, int $perPage = 10): array
+{
+    if (!applicants_feature_ready()) {
+        return ['data' => [], 'total' => 0, 'page' => 1, 'pages' => 0];
+    }
+
+    $where = [];
+    $params = [];
+
+    $search = trim((string) ($filters['q'] ?? ''));
+    if ($search !== '') {
+        $where[] = '(full_name LIKE :search OR email LIKE :search OR phone LIKE :search OR target_position LIKE :search)';
+        $params[':search'] = '%' . $search . '%';
+    }
+
+    $status = trim((string) ($filters['status'] ?? ''));
+    if ($status !== '' && array_key_exists($status, admin_status_options())) {
+        $where[] = 'status = :status';
+        $params[':status'] = $status;
+    }
+
+    $position = trim((string) ($filters['position'] ?? ''));
+    if ($position !== '') {
+        $where[] = 'target_position = :position';
+        $params[':position'] = $position;
+    }
+
+    $whereClause = $where !== [] ? ' WHERE ' . implode(' AND ', $where) : '';
+
+    $countStmt = db()->prepare('SELECT COUNT(*) FROM applicants' . $whereClause);
+    $countStmt->execute($params);
+    $total = (int) $countStmt->fetchColumn();
+
+    $pages = $total > 0 ? (int) ceil($total / $perPage) : 0;
+    $page = max(1, min($page, max(1, $pages)));
+    $offset = ($page - 1) * $perPage;
+
+    $sql = 'SELECT * FROM applicants' . $whereClause . ' ORDER BY created_at DESC LIMIT ' . $perPage . ' OFFSET ' . $offset;
+    $stmt = db()->prepare($sql);
+    $stmt->execute($params);
+
+    return [
+        'data' => $stmt->fetchAll(),
+        'total' => $total,
+        'page' => $page,
+        'pages' => $pages,
+    ];
 }

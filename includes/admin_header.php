@@ -19,6 +19,7 @@ $adminIdentity = admin_identity();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= e(asset_url('assets/css/styles.css')) ?>">
 </head>
 <body class="admin-body">
@@ -26,11 +27,12 @@ $adminIdentity = admin_identity();
     <aside class="admin-sidebar">
         <div class="admin-brand">
             <a class="brand" href="<?= e(site_url()) ?>">Diva Buildcom</a>
-            <p>Careers Admin Terminal</p>
+            <p>Admin Terminal</p>
         </div>
         <nav class="admin-nav">
             <?php foreach (admin_nav_items() as $item): ?>
                 <a href="<?= e($item['href']) ?>" class="<?= is_admin_page($item['page']) ? 'active' : '' ?>">
+                    <span class="material-symbols-outlined"><?= e($item['icon']) ?></span>
                     <?= e($item['label']) ?>
                 </a>
             <?php endforeach; ?>
@@ -44,7 +46,6 @@ $adminIdentity = admin_identity();
     <div class="admin-main">
         <header class="admin-topbar">
             <div>
-                <span class="eyebrow">Recruitment Operations</span>
                 <h1><?= e($adminHeading) ?></h1>
                 <p><?= e($adminIntro) ?></p>
             </div>

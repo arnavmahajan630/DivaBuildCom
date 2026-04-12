@@ -44,8 +44,8 @@ require __DIR__ . '/includes/header.php';
                 <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiiy82X96vxx-NayZyGql9Dk1-vYyz7iZFxl-CfrplQIHenM4OgD-kZ9fxL-WVlFvWRCwLOeSdOG19DjNFtGC4Wts0vTHj96CBeTh5lBLXyKmdYu2EmmabakuxZCuZBW0p3xpjLNuwH0-dJ1Z7vKViVgC5adnJym5OgcPyeJA_rTmdBcXf8yMUmcoTUIuR5D0omBuPWsf0t7XVA3vbJxxBmEnyXgG65TkBGljqllgrFGY-p8WsIrMdXbyTvBBEKW9wAhN54eOkLIc2" alt="Architectural drawing and tools">
             </div>
             <div class="floating-badge">
-                <strong>15+</strong>
-                <span>Years of Precision</span>
+                <strong>08</strong>
+                <span>Total Projects</span>
             </div>
         </div>
         <div data-reveal>

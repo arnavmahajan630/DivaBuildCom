@@ -13,13 +13,18 @@ $filters = [
     'status' => trim((string) ($_GET['status'] ?? '')),
     'position' => trim((string) ($_GET['position'] ?? '')),
 ];
-$applications = fetch_applications($filters);
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$paginated = fetch_applications_paginated($filters, $page, 10);
+$applications = $paginated['data'];
+$totalPages = $paginated['pages'];
+$totalCount = $paginated['total'];
+
 $positions = fetch_application_positions();
 $stats = fetch_dashboard_stats();
 
 $adminPageTitle = 'Career Applications | Diva Buildcom Admin';
 $adminHeading = 'Career Applications';
-$adminIntro = 'Review, filter, and update incoming applicant records without leaving the project.';
+$adminIntro = 'Review and manage incoming candidate profiles for current active roles.';
 
 require dirname(__DIR__) . '/includes/admin_header.php';
 ?>
@@ -29,114 +34,207 @@ require dirname(__DIR__) . '/includes/admin_header.php';
     </div>
 <?php endif; ?>
 
-<section class="admin-stats-grid admin-stats-grid-compact">
-    <article class="admin-stat-card" data-reveal>
-        <span>Total Applicants</span>
-        <strong><?= e((string) $stats['total_applications']) ?></strong>
-        <p>Every submission currently captured from the careers page.</p>
+<!-- Breadcrumb + Header -->
+<section style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px">
+    <div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#a87b07;margin-bottom:6px">
+            <span>Recruitment</span>
+            <span class="material-symbols-outlined" style="font-size:12px">chevron_right</span>
+            <span style="color:#94a3b8">Applications</span>
+        </div>
+        <p style="color:#64748b;margin:8px 0 0;max-width:500px">Review and manage incoming candidate profiles for current active industrial and engineering roles.</p>
+    </div>
+    <div style="display:flex;gap:10px">
+        <a class="button button-small button-outline" href="<?= e(admin_url('applications.php')) ?>">
+            <span class="material-symbols-outlined" style="font-size:16px">refresh</span>
+            Reset
+        </a>
+    </div>
+</section>
+
+<!-- Stats Cards -->
+<section class="admin-stats-grid">
+    <article class="admin-stat-card">
+        <div class="stat-top">
+            <div class="stat-icon blue"><span class="material-symbols-outlined">group</span></div>
+            <span class="stat-badge up">+12%</span>
+        </div>
+        <div class="stat-label">Total Applicants</div>
+        <div class="stat-value"><?= e((string) $stats['total_applications']) ?></div>
     </article>
-    <article class="admin-stat-card" data-reveal>
-        <span>Pending Review</span>
-        <strong><?= e((string) $stats['pending_review']) ?></strong>
-        <p>Applicants that still need triage or review action.</p>
+    <article class="admin-stat-card">
+        <div class="stat-top">
+            <div class="stat-icon amber"><span class="material-symbols-outlined">schedule</span></div>
+            <span class="stat-badge neutral">Current</span>
+        </div>
+        <div class="stat-label">Pending Review</div>
+        <div class="stat-value"><?= e((string) $stats['pending_review']) ?></div>
     </article>
-    <article class="admin-stat-card" data-reveal>
-        <span>Shortlisted</span>
-        <strong><?= e((string) $stats['shortlisted']) ?></strong>
-        <p>Candidates advanced to the stronger-fit pool.</p>
+    <article class="admin-stat-card">
+        <div class="stat-top">
+            <div class="stat-icon green"><span class="material-symbols-outlined">how_to_reg</span></div>
+            <span class="stat-badge up">Top 5%</span>
+        </div>
+        <div class="stat-label">Shortlisted</div>
+        <div class="stat-value"><?= e((string) $stats['shortlisted']) ?></div>
+    </article>
+    <article class="admin-stat-card">
+        <div class="stat-top">
+            <div class="stat-icon rose"><span class="material-symbols-outlined">work</span></div>
+            <span class="stat-badge neutral"><?= e((string) $stats['active_jobs']) ?> Open</span>
+        </div>
+        <div class="stat-label">Active Roles</div>
+        <div class="stat-value"><?= e((string) $stats['active_jobs']) ?></div>
     </article>
 </section>
 
-<section class="admin-panel" data-reveal>
-    <div class="admin-panel-header">
-        <div>
-            <span class="eyebrow">Filters</span>
-            <h2>Search and narrow the queue</h2>
+<!-- Filter Bar -->
+<form class="admin-filter-bar" method="get" action="<?= e(admin_url('applications.php')) ?>">
+    <div class="filter-group">
+        <div class="filter-field">
+            <label>Position</label>
+            <select name="position">
+                <option value="">All Positions</option>
+                <?php foreach ($positions as $pos): ?>
+                    <option value="<?= e($pos) ?>" <?= $filters['position'] === $pos ? 'selected' : '' ?>><?= e($pos) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
-    </div>
-    <form class="admin-filter-grid" method="get" action="<?= e(admin_url('applications.php')) ?>">
-        <div class="field">
-            <label for="applications_q">Search</label>
-            <input id="applications_q" name="q" type="text" value="<?= e($filters['q']) ?>" placeholder="Name, email, phone, or role">
-        </div>
-        <div class="field">
-            <label for="applications_status">Status</label>
-            <select id="applications_status" name="status">
+        <div class="filter-field">
+            <label>Status</label>
+            <select name="status">
                 <option value="">All Statuses</option>
                 <?php foreach (admin_status_options() as $value => $label): ?>
                     <option value="<?= e($value) ?>" <?= $filters['status'] === $value ? 'selected' : '' ?>><?= e($label) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="field">
-            <label for="applications_position">Position</label>
-            <select id="applications_position" name="position">
-                <option value="">All Positions</option>
-                <?php foreach ($positions as $position): ?>
-                    <option value="<?= e($position) ?>" <?= $filters['position'] === $position ? 'selected' : '' ?>><?= e($position) ?></option>
-                <?php endforeach; ?>
-            </select>
+        <div class="filter-field">
+            <label>Search</label>
+            <input type="text" name="q" value="<?= e($filters['q']) ?>" placeholder="Name, email, phone...">
         </div>
-        <div class="admin-filter-actions">
-            <button class="button button-dark" type="submit">Apply Filters</button>
-            <a class="button button-outline" href="<?= e(admin_url('applications.php')) ?>">Clear</a>
-        </div>
-    </form>
-</section>
+    </div>
+    <div class="admin-filter-actions">
+        <button class="button button-small button-dark" type="submit">Apply</button>
+        <a class="button button-small button-outline" href="<?= e(admin_url('applications.php')) ?>">Clear</a>
+    </div>
+</form>
 
-<section class="admin-panel" data-reveal>
-    <div class="admin-panel-header">
+<!-- Applications Table -->
+<section class="admin-table-section">
+    <div class="admin-table-header">
         <div>
-            <span class="eyebrow">Application Queue</span>
-            <h2>Candidate profiles</h2>
+            <h3>Application Queue</h3>
+            <p>Candidate profiles matching current filters</p>
         </div>
-        <span class="status-pill is-neutral"><?= e((string) count($applications)) ?> results</span>
+        <span class="status-pill is-neutral"><?= e((string) $totalCount) ?> results</span>
     </div>
 
     <?php if ($applications === []): ?>
         <p class="admin-empty">No applications matched the current filters.</p>
     <?php else: ?>
-        <div class="admin-application-list">
-            <?php foreach ($applications as $application): ?>
-                <article class="admin-application-card">
-                    <div class="admin-application-head">
-                        <div>
-                            <h3><?= e($application['full_name']) ?></h3>
-                            <p><?= e($application['target_position']) ?> • <?= e($application['email']) ?> • <?= e($application['phone']) ?></p>
-                        </div>
-                        <span class="status-pill <?= e(admin_status_class((string) $application['status'])) ?>"><?= e(admin_status_label((string) $application['status'])) ?></span>
-                    </div>
-                    <div class="admin-application-body">
-                        <div class="admin-application-copy">
-                            <p><?= nl2br(e($application['message'])) ?></p>
-                            <div class="admin-application-meta">
-                                <span>Submitted <?= e(date('d M Y, h:i A', strtotime((string) $application['created_at']))) ?></span>
-                                <a href="<?= e(site_url((string) $application['resume_path'])) ?>" target="_blank" rel="noopener">Open Resume</a>
-                            </div>
-                        </div>
-                        <form class="admin-review-form" action="<?= e(site_url('handlers/admin_application_update.php')) ?>" method="post">
-                            <?= csrf_field() ?>
-                            <input type="hidden" name="id" value="<?= e((string) $application['id']) ?>">
-                            <input type="hidden" name="filters[q]" value="<?= e($filters['q']) ?>">
-                            <input type="hidden" name="filters[status]" value="<?= e($filters['status']) ?>">
-                            <input type="hidden" name="filters[position]" value="<?= e($filters['position']) ?>">
-                            <div class="field">
-                                <label for="status_<?= e((string) $application['id']) ?>">Status</label>
-                                <select id="status_<?= e((string) $application['id']) ?>" name="status">
-                                    <?php foreach (admin_status_options() as $value => $label): ?>
-                                        <option value="<?= e($value) ?>" <?= (string) $application['status'] === $value ? 'selected' : '' ?>><?= e($label) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="notes_<?= e((string) $application['id']) ?>">Admin Notes</label>
-                                <textarea id="notes_<?= e((string) $application['id']) ?>" name="admin_notes" placeholder="Add review notes, interview context, or follow-up details."><?= e((string) ($application['admin_notes'] ?? '')) ?></textarea>
-                            </div>
-                            <button class="button button-primary" type="submit">Save Review</button>
-                        </form>
-                    </div>
-                </article>
-            <?php endforeach; ?>
+        <div style="overflow-x:auto">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Applicant Name</th>
+                        <th>Contact Information</th>
+                        <th>Position Applied</th>
+                        <th style="text-align:center">Resume</th>
+                        <th>Status</th>
+                        <th style="text-align:right">Update Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $avatarColors = ['blue', 'green', 'slate', 'amber'];
+                    foreach ($applications as $i => $app):
+                        $initials = applicant_initials((string) $app['full_name']);
+                        $color = $avatarColors[$i % count($avatarColors)];
+                        $status = (string) $app['status'];
+                    ?>
+                        <tr>
+                            <td>
+                                <div class="admin-name-cell">
+                                    <span class="admin-avatar <?= $color ?>"><?= e($initials) ?></span>
+                                    <div>
+                                        <strong><?= e($app['full_name']) ?></strong>
+                                        <div style="font-size:0.78rem;color:#94a3b8"><?= e(date('M d, Y', strtotime((string) $app['created_at']))) ?></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight:500"><?= e($app['email']) ?></div>
+                                <div style="font-size:0.78rem;color:#94a3b8"><?= e($app['phone']) ?></div>
+                            </td>
+                            <td>
+                                <span style="font-size:0.78rem;font-weight:700;color:#0a3558;background:rgba(10,53,88,0.06);padding:4px 10px;border-radius:999px"><?= e($app['target_position']) ?></span>
+                            </td>
+                            <td style="text-align:center">
+                                <div class="admin-resume-actions">
+                                    <a href="<?= e(site_url((string) $app['resume_path'])) ?>" target="_blank" rel="noopener" title="View Resume">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </a>
+                                    <a href="<?= e(site_url((string) $app['resume_path'])) ?>" download title="Download">
+                                        <span class="material-symbols-outlined">download</span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="admin-badge <?= e(admin_badge_class($status)) ?>"><?= e(admin_status_label($status)) ?></span>
+                            </td>
+                            <td style="text-align:right">
+                                <form class="admin-inline-form" action="<?= e(site_url('handlers/admin_application_update.php')) ?>" method="post">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="id" value="<?= e((string) $app['id']) ?>">
+                                    <input type="hidden" name="admin_notes" value="<?= e((string) ($app['admin_notes'] ?? '')) ?>">
+                                    <input type="hidden" name="filters[q]" value="<?= e($filters['q']) ?>">
+                                    <input type="hidden" name="filters[status]" value="<?= e($filters['status']) ?>">
+                                    <input type="hidden" name="filters[position]" value="<?= e($filters['position']) ?>">
+                                    <select name="status">
+                                        <?php foreach (admin_status_options() as $value => $label): ?>
+                                            <option value="<?= e($value) ?>" <?= $status === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="submit">Save</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+
+    <!-- Pagination -->
+    <?php if ($totalPages > 1): ?>
+        <div class="admin-pagination">
+            <span class="page-info">
+                Showing <strong><?= e((string) (($page - 1) * 10 + 1)) ?>-<?= e((string) min($page * 10, $totalCount)) ?></strong> of <strong><?= e((string) $totalCount) ?></strong> applicants
+            </span>
+            <div class="page-btns">
+                <?php if ($page > 1): ?>
+                    <a class="page-btn" href="<?= e(admin_url('applications.php?' . http_build_query(array_merge($filters, ['page' => $page - 1])))) ?>">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                <?php endif; ?>
+                <?php for ($p = 1; $p <= min($totalPages, 5); $p++): ?>
+                    <a class="page-btn <?= $p === $page ? 'active' : '' ?>" href="<?= e(admin_url('applications.php?' . http_build_query(array_merge($filters, ['page' => $p])))) ?>">
+                        <?= $p ?>
+                    </a>
+                <?php endfor; ?>
+                <?php if ($totalPages > 5): ?>
+                    <span style="color:#94a3b8;padding:0 4px">...</span>
+                    <a class="page-btn" href="<?= e(admin_url('applications.php?' . http_build_query(array_merge($filters, ['page' => $totalPages])))) ?>">
+                        <?= $totalPages ?>
+                    </a>
+                <?php endif; ?>
+                <?php if ($page < $totalPages): ?>
+                    <a class="page-btn" href="<?= e(admin_url('applications.php?' . http_build_query(array_merge($filters, ['page' => $page + 1])))) ?>">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     <?php endif; ?>
 </section>
