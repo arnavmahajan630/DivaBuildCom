@@ -2673,129 +2673,74 @@ button {
     font-family: "Plus Jakarta Sans", sans-serif;
     color: var(--text);
     line-height: 1.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .admin-auth-shell {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     min-height: 100vh;
-}
-
-/* Left branding panel */
-.admin-auth-branding {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 64px 56px;
-    background: var(--primary);
-    color: #fff;
-}
-
-.admin-auth-branding .pill {
-    background: rgba(242, 198, 76, 0.15);
-    color: var(--secondary-soft);
-    align-self: flex-start;
-}
-
-.admin-auth-branding h1 {
-    font-family: "Manrope", sans-serif;
-    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
-    font-weight: 800;
-    line-height: 1.25;
-    margin: 0 0 20px;
-    max-width: 480px;
-}
-
-.admin-auth-branding > p {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.6);
-    max-width: 420px;
-    margin: 0 0 32px;
-    line-height: 1.7;
-}
-
-.admin-auth-points {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 36px;
-}
-
-.admin-auth-points span {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.admin-auth-points span::before {
-    content: "";
-    flex-shrink: 0;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--secondary-soft);
-}
-
-.admin-auth-branding .button-outline {
-    align-self: flex-start;
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    font-size: 0.85rem;
-    padding: 12px 22px;
-}
-
-.admin-auth-branding .button-outline:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.35);
-}
-
-/* Right form panel */
-.admin-auth-form-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 40px;
-    background: var(--bg);
+    padding: 32px 20px;
 }
 
 .admin-auth-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     background: var(--surface);
     border-radius: var(--radius);
     padding: 44px 38px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+    text-align: center;
 }
 
-.admin-auth-card .eyebrow {
+.admin-auth-logo {
+    font-family: "Manrope", sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--secondary);
-    font-size: 0.72rem;
-    margin-bottom: 8px;
+    margin-bottom: 28px;
+}
+
+.admin-auth-logo::before {
+    content: "";
+    display: block;
+    width: 42px;
+    height: 4px;
+    background: var(--secondary-soft);
+    border-radius: 2px;
+    margin: 0 auto 14px;
 }
 
 .admin-auth-card h2 {
     font-family: "Manrope", sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-weight: 800;
-    margin: 0 0 8px;
+    margin: 0 0 6px;
     color: var(--primary);
 }
 
 .admin-auth-card > p {
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     color: var(--muted);
     margin: 0 0 28px;
-    line-height: 1.6;
 }
 
-.admin-auth-grid {
-    gap: 18px !important;
+.admin-auth-card form {
+    text-align: left;
+}
+
+.admin-auth-card .field {
+    margin-bottom: 18px;
 }
 
 .admin-auth-card .field label {
+    display: block;
     font-size: 0.82rem;
     font-weight: 600;
     color: var(--text);
@@ -2803,11 +2748,13 @@ button {
 }
 
 .admin-auth-card .field input {
+    width: 100%;
     background: var(--surface-alt);
     border: 1.5px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 14px 16px;
+    padding: 13px 16px;
     font-size: 0.9rem;
+    font-family: inherit;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
@@ -2818,16 +2765,27 @@ button {
     outline: none;
 }
 
-.admin-auth-card .hero-actions {
-    margin-top: 28px;
-}
-
-.admin-auth-card .hero-actions .button {
+.admin-auth-submit {
     width: 100%;
+    display: flex;
     justify-content: center;
-    padding: 15px 24px;
+    margin-top: 26px;
+    padding: 14px 24px;
     font-size: 0.92rem;
     border-radius: var(--radius-sm);
+}
+
+.admin-auth-back {
+    display: inline-block;
+    margin-top: 22px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.admin-auth-back:hover {
+    color: var(--primary);
 }
 
 .admin-auth-card .flash {
@@ -2835,42 +2793,11 @@ button {
     border-radius: var(--radius-sm);
     padding: 14px 18px;
     font-size: 0.85rem;
+    text-align: left;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-    .admin-auth-shell {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-auth-branding {
-        padding: 40px 28px 36px;
-    }
-
-    .admin-auth-branding h1 {
-        font-size: 1.4rem;
-    }
-
-    .admin-auth-branding > p {
-        display: none;
-    }
-
-    .admin-auth-points {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 24px;
-    }
-
-    .admin-auth-points span {
-        font-size: 0.78rem;
-    }
-
-    .admin-auth-form-panel {
-        padding: 32px 20px 48px;
-    }
-
+@media (max-width: 480px) {
     .admin-auth-card {
-        padding: 32px 24px;
+        padding: 32px 22px;
     }
 }
