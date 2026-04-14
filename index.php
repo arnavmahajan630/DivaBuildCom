@@ -127,7 +127,7 @@ require __DIR__ . '/includes/header.php';
             <p>Selected work that reflects our standards for delivery, finish, and long-term structural value.</p>
         </div>
         <div class="projects-grid">
-            <?php foreach ($featuredProjects as $project): ?>
+            <?php foreach ($featuredProjects as $idx => $project): ?>
                 <article class="project-card" data-reveal>
                     <div class="project-media">
                         <img src="<?= e($project['image']) ?>" alt="<?= e($project['title']) ?>">
@@ -139,12 +139,130 @@ require __DIR__ . '/includes/header.php';
                         <p><?= e($project['copy']) ?></p>
                         <div class="project-meta">
                             <span><?= e($project['location']) ?></span>
-                            <span>View Details</span>
+                            <button class="project-details-btn" type="button" data-project="<?= $idx ?>">View Details</button>
                         </div>
                     </div>
                 </article>
             <?php endforeach; ?>
         </div>
+
+        <!-- Project Detail Modal -->
+        <div class="pd-overlay" id="projectModal">
+            <div class="pd-modal">
+                <button class="pd-close" type="button" aria-label="Close">&times;</button>
+                <div class="pd-scroll">
+                    <span class="pd-category"></span>
+                    <h2 class="pd-title"></h2>
+                    <p class="pd-description"></p>
+
+                    <div class="pd-section-label">Engineering Specifications</div>
+                    <div class="pd-specs"></div>
+
+                    <div class="pd-section-label pd-floor-title"></div>
+                    <p class="pd-floor-copy"></p>
+
+                    <div class="pd-floor-row">
+                        <div class="pd-floor-plate">
+                            <span class="pd-plate-label"></span>
+                            <img class="pd-plate-img" src="" alt="">
+                        </div>
+                        <div class="pd-unit-matrix">
+                            <span class="pd-unit-heading">Unit Matrix</span>
+                            <div class="pd-units"></div>
+                        </div>
+                    </div>
+
+                    <div class="pd-zoning-title"></div>
+                    <p class="pd-zoning-copy"></p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        (function () {
+            var projects = <?= json_encode(array_map(function ($p) {
+                return [
+                    'category'   => $p['category'],
+                    'title'      => $p['title'],
+                    'detail_copy'=> $p['detail_copy'],
+                    'image'      => $p['image'],
+                    'specs'      => $p['specs'],
+                    'floor_plan_title' => $p['floor_plan_title'],
+                    'floor_plan_copy'  => $p['floor_plan_copy'],
+                    'floor_plan_label' => $p['floor_plan_label'],
+                    'units'      => $p['units'],
+                    'zoning_title' => $p['zoning_title'],
+                    'zoning_copy'  => $p['zoning_copy'],
+                ];
+            }, $featuredProjects), JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+
+            var specIcons = {
+                foundation: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M4 18h16M6 15h12M5 18v-3M19 18v-3M9 15V9l3-3 3 3v6"/></svg>',
+                structure: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>',
+                safety: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+                sustainability: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22c4-4 8-7.5 8-12A8 8 0 004 10c0 4.5 4 8 8 12z"/><path d="M12 14V8M9 11l3-3 3 3"/></svg>'
+            };
+
+            var overlay = document.getElementById('projectModal');
+            var modal = overlay.querySelector('.pd-modal');
+
+            function open(idx) {
+                var p = projects[idx];
+                if (!p) return;
+
+                overlay.querySelector('.pd-category').textContent = p.category;
+                overlay.querySelector('.pd-title').textContent = p.title;
+                overlay.querySelector('.pd-description').textContent = p.detail_copy;
+
+                var specsHtml = '';
+                p.specs.forEach(function (s) {
+                    specsHtml += '<div class="pd-spec-card">' +
+                        '<div class="pd-spec-icon">' + (specIcons[s.icon] || '') + '</div>' +
+                        '<div class="pd-spec-label">' + s.label + '</div>' +
+                        '<div class="pd-spec-value">' + s.value + '</div>' +
+                        '</div>';
+                });
+                overlay.querySelector('.pd-specs').innerHTML = specsHtml;
+
+                overlay.querySelector('.pd-floor-title').textContent = p.floor_plan_title;
+                overlay.querySelector('.pd-floor-copy').textContent = p.floor_plan_copy;
+                overlay.querySelector('.pd-plate-label').textContent = p.floor_plan_label;
+                overlay.querySelector('.pd-plate-img').src = p.image;
+                overlay.querySelector('.pd-plate-img').alt = p.floor_plan_label;
+
+                var unitsHtml = '';
+                p.units.forEach(function (u) {
+                    unitsHtml += '<div class="pd-unit-row"><span class="pd-unit-type">' + u.type + '</span><span class="pd-unit-size">' + u.size + '</span></div>';
+                });
+                overlay.querySelector('.pd-units').innerHTML = unitsHtml;
+
+                overlay.querySelector('.pd-zoning-title').textContent = p.zoning_title;
+                overlay.querySelector('.pd-zoning-copy').textContent = p.zoning_copy;
+
+                overlay.classList.add('is-active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function close() {
+                overlay.classList.remove('is-active');
+                document.body.style.overflow = '';
+            }
+
+            document.querySelectorAll('.project-details-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    open(parseInt(this.getAttribute('data-project'), 10));
+                });
+            });
+
+            overlay.querySelector('.pd-close').addEventListener('click', close);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) close();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') close();
+            });
+        })();
+        </script>
     </div>
 </section>
 
