@@ -2688,11 +2688,12 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 30, 50, 0.55);
-    backdrop-filter: blur(6px);
+    padding: 24px;
+    background: rgba(11, 24, 37, 0.62);
+    backdrop-filter: blur(16px);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .pd-overlay.is-active {
@@ -2702,12 +2703,15 @@ button {
 
 .pd-modal {
     position: relative;
-    width: 92%;
-    max-width: 720px;
-    max-height: 88vh;
-    background: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.22);
+    width: min(1180px, 100%);
+    max-height: min(90vh, 980px);
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top right, rgba(242, 198, 76, 0.12), transparent 28%),
+        linear-gradient(180deg, #fdfefe, #f5f7fa);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 30px;
+    box-shadow: 0 42px 120px rgba(4, 17, 30, 0.32);
     transform: translateY(24px) scale(0.97);
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -2718,59 +2722,142 @@ button {
 
 .pd-close {
     position: absolute;
-    top: 18px;
-    right: 18px;
+    top: 22px;
+    right: 22px;
     z-index: 5;
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--surface);
+    border: 1px solid rgba(23, 33, 43, 0.08);
+    background: rgba(225, 232, 239, 0.86);
     color: var(--muted);
     font-size: 1.3rem;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .pd-close:hover {
-    background: var(--surface-alt);
+    background: rgba(209, 220, 230, 0.95);
     color: var(--text);
+    transform: translateY(-1px);
 }
 
 .pd-scroll {
     overflow-y: auto;
-    max-height: 88vh;
-    padding: 48px 44px 44px;
+    max-height: min(90vh, 980px);
+    padding: 52px;
+}
+
+.pd-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 28px;
+    align-items: stretch;
+    margin-bottom: 32px;
+}
+
+.pd-hero-copy {
+    padding: 8px 0 0;
 }
 
 .pd-category {
     display: inline-block;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 800;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--secondary);
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .pd-title {
     font-family: "Manrope", sans-serif;
-    font-size: 1.8rem;
+    font-size: clamp(2.15rem, 4vw, 3.4rem);
     font-weight: 800;
     color: var(--primary);
-    margin: 0 0 14px;
-    line-height: 1.2;
+    margin: 0 0 16px;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
 }
 
 .pd-description {
-    font-size: 0.92rem;
+    font-size: 1rem;
     color: var(--muted);
+    line-height: 1.8;
+    margin: 0 0 24px;
+    max-width: 640px;
+}
+
+.pd-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pd-meta-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(10, 53, 88, 0.1);
+    color: var(--primary);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.pd-cover-card {
+    position: relative;
+    min-height: 280px;
+    overflow: hidden;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(10, 53, 88, 0.12), rgba(242, 198, 76, 0.14));
+    box-shadow: var(--shadow-soft);
+}
+
+.pd-cover-card::after {
+    content: "";
+    position: absolute;
+    inset: auto 20px 20px auto;
+    width: 140px;
+    height: 140px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(10, 53, 88, 0.24), rgba(10, 53, 88, 0));
+    pointer-events: none;
+}
+
+.pd-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pd-block {
+    margin-bottom: 28px;
+}
+
+.pd-block-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.pd-block-header-inline {
+    margin-bottom: 22px;
+}
+
+.pd-block-copy {
+    max-width: 420px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
     line-height: 1.7;
-    margin: 0 0 32px;
-    max-width: 580px;
 }
 
 .pd-section-label {
@@ -2795,94 +2882,200 @@ button {
 
 .pd-specs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 36px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
 }
 
 .pd-spec-card {
-    background: var(--surface-alt);
-    border-radius: var(--radius-sm);
-    padding: 20px 16px;
+    min-height: 164px;
+    padding: 22px 20px;
+    border-radius: 22px;
+    border: 1px solid rgba(10, 53, 88, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 18px 40px rgba(17, 30, 45, 0.05);
     text-align: left;
 }
 
 .pd-spec-icon {
     color: var(--secondary);
-    margin-bottom: 12px;
+    margin-bottom: 18px;
 }
 
 .pd-spec-label {
-    font-size: 0.68rem;
-    font-weight: 700;
+    font-size: 0.66rem;
+    font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 4px;
+    margin-bottom: 10px;
 }
 
 .pd-spec-value {
-    font-size: 0.85rem;
+    font-size: 0.96rem;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.35;
+    line-height: 1.45;
+}
+
+.pd-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.7fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.pd-plan-panel,
+.pd-zoning-card {
+    min-width: 0;
 }
 
 .pd-floor-copy {
-    font-size: 0.88rem;
+    font-size: 0.96rem;
     color: var(--muted);
-    margin: 0 0 22px;
-    line-height: 1.6;
+    margin: 0;
+    line-height: 1.7;
 }
 
-.pd-floor-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 28px;
+.pd-active-plan-card {
+    padding: 24px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(10, 53, 88, 0.08);
+    box-shadow: 0 24px 56px rgba(10, 30, 50, 0.08);
 }
 
-.pd-floor-plate {
-    background: var(--surface-alt);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    position: relative;
+.pd-active-plan-head {
+    margin-bottom: 18px;
 }
 
 .pd-plate-label {
     display: block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-}
-
-.pd-plate-img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.pd-unit-matrix {
-    background: var(--primary);
-    border-radius: var(--radius-sm);
-    padding: 22px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.pd-unit-heading {
     font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 12px;
+}
+
+.pd-active-plan-title {
+    margin: 0 0 10px;
+    color: var(--primary);
+    font-family: "Manrope", sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+
+.pd-active-plan-caption {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.7;
+}
+
+.pd-active-plan-frame {
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+        linear-gradient(rgba(114, 119, 127, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(114, 119, 127, 0.1) 1px, transparent 1px),
+        #fff;
+    background-size: 22px 22px, 22px 22px, auto;
+    border: 1px solid rgba(10, 53, 88, 0.08);
+}
+
+.pd-active-plan-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    padding: 18px;
+}
+
+.pd-plan-thumbs {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.pd-thumb {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(10, 53, 88, 0.08);
+    background: rgba(255, 255, 255, 0.76);
+    text-align: left;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pd-thumb:hover,
+.pd-thumb:focus-visible {
+    border-color: rgba(10, 53, 88, 0.22);
+    box-shadow: 0 16px 32px rgba(10, 30, 50, 0.08);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.pd-thumb.is-active {
+    border-color: rgba(168, 123, 7, 0.34);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(242, 198, 76, 0.18));
+}
+
+.pd-thumb-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid rgba(10, 53, 88, 0.06);
+}
+
+.pd-thumb-body {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.pd-thumb-title {
+    color: var(--primary);
+    font-size: 0.96rem;
+    font-weight: 800;
+}
+
+.pd-thumb-caption {
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.pd-side-stack {
+    display: grid;
+    gap: 16px;
+}
+
+.pd-unit-matrix {
+    background:
+        radial-gradient(circle at top right, rgba(242, 198, 76, 0.18), transparent 30%),
+        linear-gradient(180deg, #0b3558, #092844);
+    border-radius: 28px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 22px 50px rgba(10, 30, 50, 0.18);
+}
+
+.pd-unit-heading {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--secondary-soft);
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .pd-unit-row {
@@ -2890,51 +3083,105 @@ button {
     justify-content: space-between;
     align-items: baseline;
     gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pd-unit-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .pd-unit-type {
-    font-size: 0.82rem;
-    font-weight: 600;
+    font-size: 0.92rem;
+    font-weight: 700;
     color: #fff;
 }
 
 .pd-unit-size {
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.84rem;
+    color: rgba(255, 255, 255, 0.72);
     text-align: right;
 }
 
+.pd-zoning-card {
+    padding: 24px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(10, 53, 88, 0.08);
+    box-shadow: 0 20px 46px rgba(17, 30, 45, 0.06);
+}
+
 .pd-zoning-title {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--primary);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .pd-zoning-copy {
-    font-size: 0.88rem;
+    font-size: 0.94rem;
     color: var(--muted);
-    line-height: 1.65;
+    line-height: 1.75;
     margin: 0;
 }
 
-@media (max-width: 680px) {
-    .pd-scroll {
-        padding: 36px 24px 32px;
+@media (max-width: 1100px) {
+    .pd-hero,
+    .pd-main-grid {
+        grid-template-columns: 1fr;
     }
 
-    .pd-title {
-        font-size: 1.4rem;
+    .pd-cover-card {
+        min-height: 240px;
     }
 
     .pd-specs {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .pd-overlay {
+        padding: 14px;
     }
 
-    .pd-floor-row {
+    .pd-modal {
+        border-radius: 24px;
+    }
+
+    .pd-scroll {
+        padding: 28px 20px 24px;
+    }
+
+    .pd-close {
+        top: 14px;
+        right: 14px;
+    }
+
+    .pd-title {
+        font-size: 1.85rem;
+    }
+
+    .pd-block-header {
+        flex-direction: column;
+        margin-bottom: 16px;
+    }
+
+    .pd-thumb {
+        grid-template-columns: 72px minmax(0, 1fr);
+    }
+
+    .pd-specs {
         grid-template-columns: 1fr;
+    }
+
+    .pd-active-plan-card,
+    .pd-unit-matrix,
+    .pd-zoning-card {
+        padding: 20px;
     }
 }
 

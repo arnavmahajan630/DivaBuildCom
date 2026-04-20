@@ -57,6 +57,13 @@ $featuredProjects = [
         'floor_plan_title' => 'Spatial Architecture & Floor Plans',
         'floor_plan_copy' => 'Optimized corporate floor plates designed for flexible modular fit-outs.',
         'floor_plan_label' => 'Typical Office Floor Plate',
+        'plans' => [
+            [
+                'image' => site_url('resources/ProjectViewDetails/5.png'),
+                'title' => 'Office Floor Plate',
+                'caption' => 'Circular office floor plate organized around a centralized service core and perimeter work zones.',
+            ],
+        ],
         'units' => [
             ['type' => 'Executive Suite', 'size' => '2,500 - 4,000 sq.ft.'],
             ['type' => 'Open Plan Floor', 'size' => '12,000 sq.ft. (Full Plate)'],
@@ -82,6 +89,23 @@ $featuredProjects = [
         'floor_plan_title' => 'Residential Layout & Planning',
         'floor_plan_copy' => 'Open-plan residential layouts with cross-ventilation corridors and panoramic balconies on every floor.',
         'floor_plan_label' => 'Typical Residential Floor Plate',
+        'plans' => [
+            [
+                'image' => site_url('resources/ProjectViewDetails/3.png'),
+                'title' => '3BHK Layout',
+                'caption' => 'A spacious family-focused unit with a central dining spine, separate private rooms, and strong cross-ventilation.',
+            ],
+            [
+                'image' => site_url('resources/ProjectViewDetails/4.png'),
+                'title' => 'Typical Tower Floor',
+                'caption' => 'A balanced residential floor plate centered around the lift core with evenly distributed corner and mid-bay apartments.',
+            ],
+            [
+                'image' => site_url('resources/ProjectViewDetails/6.png'),
+                'title' => '2BHK Layout',
+                'caption' => 'A compact plan with clear public-private zoning, twin bedroom wings, and an efficient central living space.',
+            ],
+        ],
         'units' => [
             ['type' => '2 BHK Unit', 'size' => '850 - 1,050 sq.ft.'],
             ['type' => '3 BHK Unit', 'size' => '1,200 - 1,450 sq.ft.'],
@@ -107,6 +131,18 @@ $featuredProjects = [
         'floor_plan_title' => 'Warehouse Layout & Bay Planning',
         'floor_plan_copy' => 'High-clearance warehouse bays with modular loading dock configuration for flexible tenant operations.',
         'floor_plan_label' => 'Typical Warehouse Bay Layout',
+        'plans' => [
+            [
+                'image' => site_url('resources/ProjectViewDetails/1.png'),
+                'title' => 'Site Layout Plan',
+                'caption' => 'The master site plan organizes truck circulation, office functions, warehousing, and green support zones across the campus.',
+            ],
+            [
+                'image' => site_url('resources/ProjectViewDetails/2.png'),
+                'title' => 'Warehouse Bay Layout',
+                'caption' => 'A deep-span warehouse plan with dock-facing loading edges, support rooms, and an attached admin block.',
+            ],
+        ],
         'units' => [
             ['type' => 'Warehouse Bay', 'size' => '8,000 - 15,000 sq.ft.'],
             ['type' => 'Loading Dock', 'size' => '2,400 sq.ft. Per Bay'],

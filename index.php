@@ -148,32 +148,68 @@ require __DIR__ . '/includes/header.php';
 
         <!-- Project Detail Modal -->
         <div class="pd-overlay" id="projectModal">
-            <div class="pd-modal">
+            <div class="pd-modal" role="dialog" aria-modal="true" aria-labelledby="pd-title">
                 <button class="pd-close" type="button" aria-label="Close">&times;</button>
                 <div class="pd-scroll">
-                    <span class="pd-category"></span>
-                    <h2 class="pd-title"></h2>
-                    <p class="pd-description"></p>
-
-                    <div class="pd-section-label">Engineering Specifications</div>
-                    <div class="pd-specs"></div>
-
-                    <div class="pd-section-label pd-floor-title"></div>
-                    <p class="pd-floor-copy"></p>
-
-                    <div class="pd-floor-row">
-                        <div class="pd-floor-plate">
-                            <span class="pd-plate-label"></span>
-                            <img class="pd-plate-img" src="" alt="">
+                    <div class="pd-hero">
+                        <div class="pd-hero-copy">
+                            <span class="pd-category"></span>
+                            <h2 class="pd-title" id="pd-title"></h2>
+                            <p class="pd-description"></p>
+                            <div class="pd-meta">
+                                <span class="pd-meta-chip pd-location"></span>
+                                <span class="pd-meta-chip pd-status"></span>
+                            </div>
                         </div>
-                        <div class="pd-unit-matrix">
-                            <span class="pd-unit-heading">Unit Matrix</span>
-                            <div class="pd-units"></div>
+                        <div class="pd-cover-card">
+                            <img class="pd-cover-img" src="" alt="">
                         </div>
                     </div>
 
-                    <div class="pd-zoning-title"></div>
-                    <p class="pd-zoning-copy"></p>
+                    <section class="pd-block">
+                        <div class="pd-block-header">
+                            <div class="pd-section-label">Engineering Specifications</div>
+                            <p class="pd-block-copy">Core structural, compliance, and sustainability benchmarks that define project performance.</p>
+                        </div>
+                        <div class="pd-specs"></div>
+                    </section>
+
+                    <section class="pd-main-grid">
+                        <div class="pd-plan-panel">
+                            <div class="pd-block-header pd-block-header-inline">
+                                <div>
+                                    <div class="pd-section-label pd-floor-title"></div>
+                                    <p class="pd-floor-copy"></p>
+                                </div>
+                            </div>
+
+                            <div class="pd-active-plan-card">
+                                <div class="pd-active-plan-head">
+                                    <span class="pd-plate-label">Selected Plan</span>
+                                    <h3 class="pd-active-plan-title"></h3>
+                                    <p class="pd-active-plan-caption"></p>
+                                </div>
+                                <div class="pd-active-plan-frame">
+                                    <img class="pd-active-plan-image" src="" alt="">
+                                </div>
+                            </div>
+
+                            <div class="pd-plan-thumbs" role="tablist" aria-label="Project plan gallery"></div>
+                        </div>
+
+                        <div class="pd-side-stack">
+                            <div class="pd-unit-matrix">
+                                <span class="pd-unit-heading">Unit Matrix</span>
+                                <div class="pd-units"></div>
+                            </div>
+
+                            <div class="pd-zoning-card">
+                                <div class="pd-section-label">Planning Insight</div>
+                                <div class="pd-zoning-title"></div>
+                                <p class="pd-zoning-copy"></p>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
@@ -186,10 +222,12 @@ require __DIR__ . '/includes/header.php';
                     'title'      => $p['title'],
                     'detail_copy'=> $p['detail_copy'],
                     'image'      => $p['image'],
+                    'location'   => $p['location'],
+                    'status'     => $p['status'],
                     'specs'      => $p['specs'],
                     'floor_plan_title' => $p['floor_plan_title'],
                     'floor_plan_copy'  => $p['floor_plan_copy'],
-                    'floor_plan_label' => $p['floor_plan_label'],
+                    'plans'      => $p['plans'],
                     'units'      => $p['units'],
                     'zoning_title' => $p['zoning_title'],
                     'zoning_copy'  => $p['zoning_copy'],
@@ -204,40 +242,106 @@ require __DIR__ . '/includes/header.php';
             };
 
             var overlay = document.getElementById('projectModal');
-            var modal = overlay.querySelector('.pd-modal');
+            var activeProjectIndex = null;
+            var activePlanIndex = 0;
+
+            function createNode(tag, className, text) {
+                var node = document.createElement(tag);
+                if (className) {
+                    node.className = className;
+                }
+
+                if (typeof text === 'string') {
+                    node.textContent = text;
+                }
+
+                return node;
+            }
+
+            function renderPlans(project, selectedIndex) {
+                var plan = project.plans[selectedIndex] || project.plans[0];
+                var thumbs = overlay.querySelector('.pd-plan-thumbs');
+
+                overlay.querySelector('.pd-active-plan-title').textContent = plan.title;
+                overlay.querySelector('.pd-active-plan-caption').textContent = plan.caption || '';
+                overlay.querySelector('.pd-active-plan-image').src = plan.image;
+                overlay.querySelector('.pd-active-plan-image').alt = plan.title;
+
+                thumbs.innerHTML = '';
+
+                project.plans.forEach(function (item, index) {
+                    var button = createNode('button', 'pd-thumb' + (index === selectedIndex ? ' is-active' : ''));
+                    var thumbImage = createNode('img', 'pd-thumb-image');
+                    var thumbBody = createNode('span', 'pd-thumb-body');
+                    var thumbTitle = createNode('span', 'pd-thumb-title', item.title);
+                    var thumbCaption = createNode('span', 'pd-thumb-caption', item.caption || '');
+
+                    button.type = 'button';
+                    button.setAttribute('role', 'tab');
+                    button.setAttribute('aria-selected', index === selectedIndex ? 'true' : 'false');
+                    button.setAttribute('aria-label', item.title);
+                    button.dataset.planIndex = String(index);
+
+                    thumbImage.src = item.image;
+                    thumbImage.alt = item.title;
+
+                    thumbBody.appendChild(thumbTitle);
+                    thumbBody.appendChild(thumbCaption);
+                    button.appendChild(thumbImage);
+                    button.appendChild(thumbBody);
+                    thumbs.appendChild(button);
+                });
+            }
 
             function open(idx) {
                 var p = projects[idx];
                 if (!p) return;
 
+                activeProjectIndex = idx;
+                activePlanIndex = 0;
+
                 overlay.querySelector('.pd-category').textContent = p.category;
                 overlay.querySelector('.pd-title').textContent = p.title;
                 overlay.querySelector('.pd-description').textContent = p.detail_copy;
+                overlay.querySelector('.pd-location').textContent = p.location;
+                overlay.querySelector('.pd-status').textContent = p.status;
+                overlay.querySelector('.pd-cover-img').src = p.image;
+                overlay.querySelector('.pd-cover-img').alt = p.title;
 
-                var specsHtml = '';
+                var specs = overlay.querySelector('.pd-specs');
+                specs.innerHTML = '';
                 p.specs.forEach(function (s) {
-                    specsHtml += '<div class="pd-spec-card">' +
-                        '<div class="pd-spec-icon">' + (specIcons[s.icon] || '') + '</div>' +
-                        '<div class="pd-spec-label">' + s.label + '</div>' +
-                        '<div class="pd-spec-value">' + s.value + '</div>' +
-                        '</div>';
+                    var specCard = createNode('div', 'pd-spec-card');
+                    var specIcon = createNode('div', 'pd-spec-icon');
+                    var specLabel = createNode('div', 'pd-spec-label', s.label);
+                    var specValue = createNode('div', 'pd-spec-value', s.value);
+
+                    specIcon.innerHTML = specIcons[s.icon] || '';
+                    specCard.appendChild(specIcon);
+                    specCard.appendChild(specLabel);
+                    specCard.appendChild(specValue);
+                    specs.appendChild(specCard);
                 });
-                overlay.querySelector('.pd-specs').innerHTML = specsHtml;
 
                 overlay.querySelector('.pd-floor-title').textContent = p.floor_plan_title;
                 overlay.querySelector('.pd-floor-copy').textContent = p.floor_plan_copy;
-                overlay.querySelector('.pd-plate-label').textContent = p.floor_plan_label;
-                overlay.querySelector('.pd-plate-img').src = p.image;
-                overlay.querySelector('.pd-plate-img').alt = p.floor_plan_label;
+                renderPlans(p, activePlanIndex);
 
-                var unitsHtml = '';
+                var units = overlay.querySelector('.pd-units');
+                units.innerHTML = '';
                 p.units.forEach(function (u) {
-                    unitsHtml += '<div class="pd-unit-row"><span class="pd-unit-type">' + u.type + '</span><span class="pd-unit-size">' + u.size + '</span></div>';
+                    var row = createNode('div', 'pd-unit-row');
+                    var type = createNode('span', 'pd-unit-type', u.type);
+                    var size = createNode('span', 'pd-unit-size', u.size);
+
+                    row.appendChild(type);
+                    row.appendChild(size);
+                    units.appendChild(row);
                 });
-                overlay.querySelector('.pd-units').innerHTML = unitsHtml;
 
                 overlay.querySelector('.pd-zoning-title').textContent = p.zoning_title;
                 overlay.querySelector('.pd-zoning-copy').textContent = p.zoning_copy;
+                overlay.querySelector('.pd-scroll').scrollTop = 0;
 
                 overlay.classList.add('is-active');
                 document.body.style.overflow = 'hidden';
@@ -246,12 +350,25 @@ require __DIR__ . '/includes/header.php';
             function close() {
                 overlay.classList.remove('is-active');
                 document.body.style.overflow = '';
+                activeProjectIndex = null;
             }
 
             document.querySelectorAll('.project-details-btn').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     open(parseInt(this.getAttribute('data-project'), 10));
                 });
+            });
+
+            overlay.querySelector('.pd-plan-thumbs').addEventListener('click', function (event) {
+                var trigger = event.target.closest('.pd-thumb');
+                var project = projects[activeProjectIndex];
+
+                if (!trigger || !project) {
+                    return;
+                }
+
+                activePlanIndex = parseInt(trigger.dataset.planIndex || '0', 10);
+                renderPlans(project, activePlanIndex);
             });
 
             overlay.querySelector('.pd-close').addEventListener('click', close);
