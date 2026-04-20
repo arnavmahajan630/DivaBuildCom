@@ -24,7 +24,7 @@ return [
     ],
     'admin' => [
         'identity' => 'admin@divabuildcom.local',
-        'password_hash' => '$2y$10$tPdvPbNkzWeZCFPvex6sEeRUoHisxY8wJrGdLD1Ka6napRIjEybN2',
+        'password_hash' => '$2y$10$ldHXUVjLesOkgwOQjywhoejUOux/ulkaZHZVMQYcNBD.ackzOvtXK',
         'display_name' => 'Admin',
     ],
     'uploads' => [

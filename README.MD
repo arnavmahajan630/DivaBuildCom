@@ -68,6 +68,11 @@ The local defaults are already set in [`includes/config.php`](/opt/lampp/htdocs/
 
 If your local MySQL root user has a password, update the `pass` value in [`includes/config.php`](/opt/lampp/htdocs/DivaBuildCom/includes/config.php).
 
+## Admin Login
+
+- Admin email: `admin@divabuildcom.local`
+- Admin password: `admin123`
+
 ## Resume Uploads
 
 - Upload path: [`assets/uploads/resumes`](/opt/lampp/htdocs/DivaBuildCom/assets/uploads/resumes)
