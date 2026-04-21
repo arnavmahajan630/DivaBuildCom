@@ -191,6 +191,10 @@ require __DIR__ . '/includes/header.php';
                                 </div>
                                 <div class="pd-active-plan-frame">
                                     <img class="pd-active-plan-image" src="" alt="">
+                                    <div class="pd-image-fallback pd-active-plan-fallback" hidden>
+                                        <strong>Plan image unavailable</strong>
+                                        <span>This layout preview could not be loaded.</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -258,14 +262,40 @@ require __DIR__ . '/includes/header.php';
                 return node;
             }
 
+            function setImageState(imageNode, src, alt, fallbackNode) {
+                if (!imageNode || !fallbackNode) {
+                    return;
+                }
+
+                imageNode.classList.remove('is-hidden');
+                fallbackNode.hidden = true;
+                fallbackNode.setAttribute('aria-hidden', 'true');
+                imageNode.alt = alt || '';
+
+                imageNode.onerror = function () {
+                    imageNode.classList.add('is-hidden');
+                    fallbackNode.hidden = false;
+                    fallbackNode.setAttribute('aria-hidden', 'false');
+                };
+
+                imageNode.onload = function () {
+                    imageNode.classList.remove('is-hidden');
+                    fallbackNode.hidden = true;
+                    fallbackNode.setAttribute('aria-hidden', 'true');
+                };
+
+                imageNode.src = src;
+            }
+
             function renderPlans(project, selectedIndex) {
                 var plan = project.plans[selectedIndex] || project.plans[0];
                 var thumbs = overlay.querySelector('.pd-plan-thumbs');
+                var activePlanImage = overlay.querySelector('.pd-active-plan-image');
+                var activePlanFallback = overlay.querySelector('.pd-active-plan-fallback');
 
                 overlay.querySelector('.pd-active-plan-title').textContent = plan.title;
                 overlay.querySelector('.pd-active-plan-caption').textContent = plan.caption || '';
-                overlay.querySelector('.pd-active-plan-image').src = plan.image;
-                overlay.querySelector('.pd-active-plan-image').alt = plan.title;
+                setImageState(activePlanImage, plan.image, plan.title, activePlanFallback);
 
                 thumbs.innerHTML = '';
 
@@ -273,6 +303,9 @@ require __DIR__ . '/includes/header.php';
                     var button = createNode('button', 'pd-thumb' + (index === selectedIndex ? ' is-active' : ''));
                     var thumbPreview = createNode('span', 'pd-thumb-preview');
                     var thumbImage = createNode('img', 'pd-thumb-image');
+                    var thumbFallback = createNode('span', 'pd-image-fallback pd-thumb-fallback');
+                    var thumbFallbackTitle = createNode('strong', '', 'Preview unavailable');
+                    var thumbFallbackCopy = createNode('span', '', 'This plan image could not be loaded.');
                     var thumbBody = createNode('span', 'pd-thumb-body');
                     var thumbTitle = createNode('span', 'pd-thumb-title', item.title);
                     var thumbCaption = createNode('span', 'pd-thumb-caption', item.caption || '');
@@ -283,10 +316,14 @@ require __DIR__ . '/includes/header.php';
                     button.setAttribute('aria-label', item.title);
                     button.dataset.planIndex = String(index);
 
-                    thumbImage.src = item.image;
-                    thumbImage.alt = item.title;
+                    thumbFallback.hidden = true;
+                    thumbFallback.setAttribute('aria-hidden', 'true');
+                    thumbFallback.appendChild(thumbFallbackTitle);
+                    thumbFallback.appendChild(thumbFallbackCopy);
 
+                    setImageState(thumbImage, item.image, item.title, thumbFallback);
                     thumbPreview.appendChild(thumbImage);
+                    thumbPreview.appendChild(thumbFallback);
                     thumbBody.appendChild(thumbTitle);
                     thumbBody.appendChild(thumbCaption);
                     button.appendChild(thumbPreview);

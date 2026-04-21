@@ -2999,6 +2999,36 @@ button {
     padding: 24px;
 }
 
+.pd-active-plan-image.is-hidden,
+.pd-thumb-image.is-hidden {
+    display: none;
+}
+
+.pd-image-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: inherit;
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.pd-image-fallback strong {
+    color: var(--primary);
+    font-size: 0.98rem;
+    font-weight: 800;
+}
+
+.pd-image-fallback span {
+    max-width: 26ch;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
 .pd-plan-thumbs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3035,6 +3065,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     min-height: 220px;
     border-radius: 18px;
     overflow: hidden;
@@ -3053,6 +3084,11 @@ button {
     max-height: 220px;
     object-fit: contain;
     padding: 14px;
+}
+
+.pd-thumb-fallback {
+    min-height: 220px;
+    padding: 20px;
 }
 
 .pd-thumb-body {
