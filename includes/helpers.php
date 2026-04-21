@@ -111,7 +111,8 @@ function normalize_phone(string $value): string
 
 function valid_phone(string $value): bool
 {
-    return (bool) preg_match('/^[0-9+\-\s()]{8,20}$/', $value);
+    $digits = preg_replace('/\D+/', '', $value);
+    return strlen((string) $digits) === 10;
 }
 
 function redirect(string $path): never

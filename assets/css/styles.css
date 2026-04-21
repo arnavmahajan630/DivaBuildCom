@@ -1917,6 +1917,137 @@ button {
     text-decoration: underline;
 }
 
+.admin-review-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #002743;
+}
+
+.admin-review-btn:hover { text-decoration: underline; }
+
+/* Dashboard Review Modal */
+.admin-review-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 24, 40, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1000;
+}
+
+.admin-review-overlay[hidden] { display: none; }
+
+.admin-review-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 32px;
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.admin-review-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    line-height: 1;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.admin-review-close:hover { color: #002743; }
+
+.admin-review-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.admin-review-head h3 {
+    margin: 0 0 6px;
+    font-size: 1.4rem;
+    color: #002743;
+}
+
+.admin-review-sub {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.admin-review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 24px;
+    margin: 0 0 20px;
+}
+
+.admin-review-grid div dt,
+.admin-review-message dt {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.admin-review-grid div dd,
+.admin-review-message dd {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #1f2937;
+    word-break: break-word;
+}
+
+.admin-review-message {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+}
+
+.admin-review-message dd {
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.admin-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.admin-review-actions .button { display: inline-flex; align-items: center; gap: 6px; }
+
+@media (max-width: 560px) {
+    .admin-review-grid { grid-template-columns: 1fr; }
+    .admin-review-card { padding: 24px; }
+}
+
 /* Admin Job Grid */
 .admin-job-grid {
     display: grid;

@@ -29,7 +29,7 @@ function admin_nav_items(): array
         ['label' => 'Dashboard', 'href' => admin_url('index.php'), 'page' => 'admin_dashboard', 'icon' => 'dashboard'],
         ['label' => 'Career Applications', 'href' => admin_url('applications.php'), 'page' => 'admin_applications', 'icon' => 'description'],
         ['label' => 'Job Listings', 'href' => admin_url('jobs.php'), 'page' => 'admin_jobs', 'icon' => 'list_alt'],
-        ['label' => 'Add Job Post', 'href' => admin_url('jobs.php?create=1'), 'page' => '', 'icon' => 'add_box'],
+        ['label' => 'Inquiries', 'href' => admin_url('inquiries.php'), 'page' => 'admin_inquiries', 'icon' => 'mail'],
     ];
 }
 
@@ -136,6 +136,62 @@ function jobs_feature_ready(): bool
 function applicants_feature_ready(): bool
 {
     return admin_table_exists('applicants');
+}
+
+function inquiries_feature_ready(): bool
+{
+    return admin_table_exists('inquiries');
+}
+
+function fetch_inquiry_stats(): array
+{
+    $defaults = ['total' => 0, 'last_7_days' => 0];
+
+    if (!inquiries_feature_ready()) {
+        return $defaults;
+    }
+
+    $total = (int) db()->query('SELECT COUNT(*) FROM inquiries')->fetchColumn();
+    $recent = (int) db()->query('SELECT COUNT(*) FROM inquiries WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)')->fetchColumn();
+
+    return ['total' => $total, 'last_7_days' => $recent];
+}
+
+function fetch_inquiries_paginated(array $filters = [], int $page = 1, int $perPage = 15): array
+{
+    if (!inquiries_feature_ready()) {
+        return ['data' => [], 'total' => 0, 'page' => 1, 'pages' => 0];
+    }
+
+    $where = [];
+    $params = [];
+
+    $search = trim((string) ($filters['q'] ?? ''));
+    if ($search !== '') {
+        $where[] = 'full_name LIKE :search';
+        $params[':search'] = '%' . $search . '%';
+    }
+
+    $whereClause = $where !== [] ? ' WHERE ' . implode(' AND ', $where) : '';
+
+    $countStmt = db()->prepare('SELECT COUNT(*) FROM inquiries' . $whereClause);
+    $countStmt->execute($params);
+    $total = (int) $countStmt->fetchColumn();
+
+    $pages = $total > 0 ? (int) ceil($total / $perPage) : 0;
+    $page = max(1, min($page, max(1, $pages)));
+    $offset = ($page - 1) * $perPage;
+
+    $sql = 'SELECT * FROM inquiries' . $whereClause . ' ORDER BY created_at DESC LIMIT ' . $perPage . ' OFFSET ' . $offset;
+    $stmt = db()->prepare($sql);
+    $stmt->execute($params);
+
+    return [
+        'data' => $stmt->fetchAll(),
+        'total' => $total,
+        'page' => $page,
+        'pages' => $pages,
+    ];
 }
 
 function fallback_jobs(): array
@@ -329,7 +385,7 @@ function fetch_applications(array $filters = []): array
 
     $search = trim((string) ($filters['q'] ?? ''));
     if ($search !== '') {
-        $where[] = '(full_name LIKE :search OR email LIKE :search OR phone LIKE :search OR target_position LIKE :search)';
+        $where[] = 'full_name LIKE :search';
         $params[':search'] = '%' . $search . '%';
     }
 
@@ -459,7 +515,7 @@ function fetch_applications_paginated(array $filters = [], int $page = 1, int $p
 
     $search = trim((string) ($filters['q'] ?? ''));
     if ($search !== '') {
-        $where[] = '(full_name LIKE :search OR email LIKE :search OR phone LIKE :search OR target_position LIKE :search)';
+        $where[] = 'full_name LIKE :search';
         $params[':search'] = '%' . $search . '%';
     }
 

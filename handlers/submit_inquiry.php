@@ -23,18 +23,24 @@ if (!verify_csrf($_POST['csrf_token'] ?? null)) {
 
 if ($old['full_name'] === '' || strlen($old['full_name']) < 2) {
     $errors['full_name'] = 'Please enter your full name.';
+} elseif (mb_strlen($old['full_name']) > 120) {
+    $errors['full_name'] = 'Full name must be under 120 characters.';
 }
 
 if ($old['phone'] === '' || !valid_phone($old['phone'])) {
-    $errors['phone'] = 'Please enter a valid phone number.';
+    $errors['phone'] = 'Please enter a valid 10-digit phone number.';
 }
 
 if ($old['email'] === '' || !filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = 'Please enter a valid email address.';
+} elseif (mb_strlen($old['email']) > 160) {
+    $errors['email'] = 'Email must be under 160 characters.';
 }
 
 if ($old['project_details'] === '' || strlen($old['project_details']) < 15) {
     $errors['project_details'] = 'Please share a few more details about your project.';
+} elseif (mb_strlen($old['project_details']) > 2000) {
+    $errors['project_details'] = 'Project details must be under 2000 characters.';
 }
 
 if ($errors !== []) {

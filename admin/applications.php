@@ -110,8 +110,8 @@ require dirname(__DIR__) . '/includes/admin_header.php';
             </select>
         </div>
         <div class="filter-field">
-            <label>Search</label>
-            <input type="text" name="q" value="<?= e($filters['q']) ?>" placeholder="Name, email, phone...">
+            <label>Find by name</label>
+            <input type="text" name="q" value="<?= e($filters['q']) ?>" placeholder="Applicant name">
         </div>
     </div>
     <div class="admin-filter-actions">

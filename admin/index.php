@@ -139,7 +139,6 @@ require dirname(__DIR__) . '/includes/admin_header.php';
                         <th>Position</th>
                         <th>Status</th>
                         <th>Date</th>
-                        <th style="text-align:right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -162,9 +161,6 @@ require dirname(__DIR__) . '/includes/admin_header.php';
                                 <span class="admin-badge <?= e(admin_badge_class($status)) ?>"><?= e(admin_status_label($status)) ?></span>
                             </td>
                             <td style="color:#94a3b8;font-size:0.85rem"><?= e(date('M d, Y', strtotime((string) $app['created_at']))) ?></td>
-                            <td style="text-align:right">
-                                <a class="admin-review-link" href="<?= e(admin_url('applications.php?q=' . urlencode((string) $app['full_name']))) ?>">Review</a>
-                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -175,4 +171,5 @@ require dirname(__DIR__) . '/includes/admin_header.php';
         <a href="<?= e(admin_url('applications.php')) ?>">View All <?= e((string) $stats['total_applications']) ?> Applications</a>
     </div>
 </section>
+
 <?php require dirname(__DIR__) . '/includes/admin_footer.php'; ?>

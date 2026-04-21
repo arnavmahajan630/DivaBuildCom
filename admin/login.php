@@ -18,101 +18,153 @@ $pageTitle = 'Admin Sign In | Diva Buildcom';
     <meta name="description" content="Sign in to the Diva Buildcom admin area.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= e(asset_url('assets/css/styles.css')) ?>">
+    <style>
+        body.admin-login-body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Manrope', system-ui, sans-serif;
+            background: #0f2033;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .admin-login-card {
+            width: 100%;
+            max-width: 460px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 3rem 3rem 2.25rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+            text-align: center;
+        }
+        .admin-login-rule {
+            width: 56px;
+            height: 3px;
+            background: #c9a227;
+            margin: 0 auto 1.25rem;
+            border-radius: 2px;
+        }
+        .admin-login-brand {
+            font-size: 0.85rem;
+            letter-spacing: 0.28em;
+            font-weight: 700;
+            color: #c9a227;
+            margin-bottom: 1.75rem;
+        }
+        .admin-login-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #0f2033;
+            margin: 0 0 0.5rem;
+        }
+        .admin-login-subtitle {
+            color: #5b6b7a;
+            font-size: 0.95rem;
+            margin: 0 0 2rem;
+        }
+        .admin-login-form { text-align: left; }
+        .admin-login-field { margin-bottom: 1.25rem; }
+        .admin-login-field label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            color: #0f2033;
+            margin-bottom: 0.55rem;
+        }
+        .admin-login-field input {
+            width: 100%;
+            padding: 0.95rem 1.1rem;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            background: #eef1f4;
+            font-size: 0.95rem;
+            color: #0f2033;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .admin-login-field input:focus {
+            outline: none;
+            border-color: #c9a227;
+            background: #fff;
+        }
+        .admin-login-submit {
+            width: 100%;
+            padding: 1rem;
+            background: #0f2033;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+        .admin-login-submit:hover { background: #1a3353; }
+        .admin-login-back {
+            display: block;
+            margin-top: 1.5rem;
+            color: #5b6b7a;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .admin-login-back:hover { color: #0f2033; }
+        .admin-login-flash {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .admin-login-flash.flash-error { background: #fdecec; color: #a12828; }
+        .admin-login-flash.flash-success { background: #e8f5ee; color: #1f6b3a; }
+        .admin-login-field .field-error {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.8rem;
+            color: #a12828;
+        }
+    </style>
 </head>
-<body class="admin-auth-body">
-    <main class="admin-auth-shell">
-        <section class="admin-auth-visual" aria-hidden="true">
-            <div class="admin-auth-visual-overlay"></div>
-            <img
-                class="admin-auth-visual-image"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuASrNcTgBRFxfq_uUAGWO-77vU6guM4OGHjeptRqtM8MnHdGqzejCbcRAUdeJznjbQfk3NmPVdOjug3duXEsO_c07ZEbhCnFZcjsP7uFZIJix4hESOW3wiACaV9AhUS8vdpzahKHRZ0eNGnZQ9FiBf4wt_D6UKE1DDgpZQZ5q45VqI9irg4-ZjP41vY82kOBNMRYw0y7AvsI04rvSY3yeim4glp_bA3U_5ONhqsghmZp22OmBgXHrUp-N2UszlK9tDmgcHQ5TIwMMI"
-                alt="Construction cranes at sunset"
-            >
-            <div class="admin-auth-visual-content">
-                <div class="admin-auth-visual-top">
-                    <span class="admin-auth-badge">Systems Access</span>
-                    <h1>Building the foundations of excellence.</h1>
-                </div>
-                <div class="admin-auth-visual-bottom">
-                    <div class="admin-auth-visual-divider"></div>
-                    <div>
-                        <p class="admin-auth-visual-label">Operations Unit</p>
-                        <p class="admin-auth-visual-copy">Secured enterprise portal for Diva Buildcom project management and structural oversight.</p>
-                    </div>
-                </div>
+<body class="admin-login-body">
+    <main class="admin-login-card">
+        <div class="admin-login-rule"></div>
+        <div class="admin-login-brand">DIVA BUILDCOM</div>
+        <h1 class="admin-login-title">Admin Sign In</h1>
+        <p class="admin-login-subtitle">Enter your credentials to access the dashboard.</p>
+
+        <?php if ($flash !== null): ?>
+            <div class="admin-login-flash <?= has_errors($flash) ? 'flash-error' : 'flash-success' ?>">
+                <?= e($flash['message']) ?>
             </div>
-        </section>
+        <?php endif; ?>
 
-        <section class="admin-auth-panel">
-            <div class="admin-auth-panel-inner">
-                <div class="admin-auth-brand">
-                    <div class="admin-auth-brand-mark">
-                        <span class="material-symbols-outlined" aria-hidden="true">architecture</span>
-                    </div>
-                    <span class="admin-auth-brand-text">Diva Buildcom</span>
-                </div>
+        <form class="admin-login-form" action="<?= e(site_url('handlers/admin_login.php')) ?>" method="post" novalidate>
+            <?= csrf_field() ?>
 
-                <header class="admin-auth-header">
-                    <h2>Admin Terminal</h2>
-                    <p>Please enter your credentials to access the project dashboard.</p>
-                </header>
-
-                <?php if ($flash !== null): ?>
-                    <div class="flash admin-auth-flash <?= has_errors($flash) ? 'flash-error' : 'flash-success' ?>">
-                        <div><?= e($flash['message']) ?></div>
-                    </div>
-                <?php endif; ?>
-
-                <form class="admin-auth-form" action="<?= e(site_url('handlers/admin_login.php')) ?>" method="post" novalidate>
-                    <?= csrf_field() ?>
-
-                    <div class="admin-auth-field">
-                        <label for="admin_identity">Email / Username</label>
-                        <div class="admin-auth-input-wrap">
-                            <span class="material-symbols-outlined admin-auth-input-icon" aria-hidden="true">person</span>
-                            <input id="admin_identity" name="identity" type="email" value="<?= e(old_input($flash, 'identity', '')) ?>" placeholder="name@divabuild.com" required>
-                        </div>
-                        <?php if ($error = field_error($flash, 'identity')): ?><span class="field-error"><?= e($error) ?></span><?php endif; ?>
-                    </div>
-
-                    <div class="admin-auth-field">
-                        <div class="admin-auth-field-row">
-                            <label for="admin_password">Password</label>
-                            <a class="admin-auth-help" href="#" aria-disabled="true">Forgot password?</a>
-                        </div>
-                        <div class="admin-auth-input-wrap">
-                            <span class="material-symbols-outlined admin-auth-input-icon" aria-hidden="true">lock</span>
-                            <input id="admin_password" name="password" type="password" placeholder="••••••••" required>
-                        </div>
-                        <?php if ($error = field_error($flash, 'password')): ?><span class="field-error"><?= e($error) ?></span><?php endif; ?>
-                    </div>
-
-                    <button class="button admin-auth-submit" type="submit">
-                        <span>Initialize Session</span>
-                        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-                    </button>
-
-                    <div class="admin-auth-divider" aria-hidden="true">
-                        <span></span>
-                        <strong>Authorized Access Only</strong>
-                        <span></span>
-                    </div>
-                </form>
-
-                <div class="admin-auth-meta">
-                    <div class="admin-auth-security">
-                        <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-                        <p>Encrypted 256-bit SSL Connection Active. Session ID: DIVA-SYS-8821</p>
-                    </div>
-                    <p class="admin-auth-copyright">&copy; 2024 Diva Buildcom. Engineered for Excellence.</p>
-                </div>
-
-                <a class="admin-auth-back" href="<?= e(site_url()) ?>">Back to website</a>
+            <div class="admin-login-field">
+                <label for="admin_identity">EMAIL</label>
+                <input id="admin_identity" name="identity" type="email" value="<?= e(old_input($flash, 'identity', '')) ?>" placeholder="admin@divabuildcom.local" required>
+                <?php if ($error = field_error($flash, 'identity')): ?><span class="field-error"><?= e($error) ?></span><?php endif; ?>
             </div>
-        </section>
+
+            <div class="admin-login-field">
+                <label for="admin_password">PASSWORD</label>
+                <input id="admin_password" name="password" type="password" placeholder="Enter password" required>
+                <?php if ($error = field_error($flash, 'password')): ?><span class="field-error"><?= e($error) ?></span><?php endif; ?>
+            </div>
+
+            <button class="admin-login-submit" type="submit">Sign In</button>
+        </form>
+
+        <a class="admin-login-back" href="<?= e(site_url()) ?>">Back to website</a>
     </main>
 </body>
 </html>

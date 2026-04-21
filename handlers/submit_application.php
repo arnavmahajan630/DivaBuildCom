@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('careers.php');
+    redirect('careers.php#openings');
 }
 
 $uploadConfig = config('uploads');
@@ -26,22 +26,35 @@ if (!verify_csrf($_POST['csrf_token'] ?? null)) {
 
 if ($old['full_name'] === '' || strlen($old['full_name']) < 2) {
     $errors['full_name'] = 'Please enter your full name.';
+} elseif (mb_strlen($old['full_name']) > 120) {
+    $errors['full_name'] = 'Full name must be under 120 characters.';
 }
 
 if ($old['email'] === '' || !filter_var($old['email'], FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = 'Please enter a valid email address.';
+} elseif (mb_strlen($old['email']) > 160) {
+    $errors['email'] = 'Email must be under 160 characters.';
 }
 
 if ($old['phone'] === '' || !valid_phone($old['phone'])) {
-    $errors['phone'] = 'Please enter a valid phone number.';
+    $errors['phone'] = 'Please enter a valid 10-digit phone number.';
 }
 
 if ($old['target_position'] === '') {
     $errors['target_position'] = 'Please select a target position.';
+} else {
+    require_once dirname(__DIR__) . '/includes/admin.php';
+    $validTitles = array_map(static fn(array $j): string => (string) $j['title'], fetch_active_jobs());
+    $validTitles[] = 'Other';
+    if (!in_array($old['target_position'], $validTitles, true)) {
+        $errors['target_position'] = 'Please select a position from the list.';
+    }
 }
 
 if ($old['message'] === '' || strlen($old['message']) < 12) {
     $errors['message'] = 'Please add a short message about your interest in the role.';
+} elseif (mb_strlen($old['message']) > 2000) {
+    $errors['message'] = 'Message must be under 2000 characters.';
 }
 
 $resume = $_FILES['resume'] ?? null;
@@ -89,14 +102,14 @@ if (!isset($errors['resume']) && is_array($resume)) {
 
 if ($errors !== []) {
     set_flash('application', 'Please correct the highlighted fields and submit again.', $old, $errors);
-    redirect('careers.php');
+    redirect('careers.php#openings');
 }
 
 if (!move_uploaded_file((string) $resume['tmp_name'], (string) $resumePath)) {
     set_flash('application', 'We could not save your resume upload. Please try again.', $old, [
         'resume' => 'Resume upload failed.',
     ]);
-    redirect('careers.php');
+    redirect('careers.php#openings');
 }
 
 try {
@@ -127,7 +140,7 @@ try {
     set_flash('application', 'We could not submit your application right now. Please try again.', $old, [
         'general' => 'Submission failed.',
     ]);
-    redirect('careers.php');
+    redirect('careers.php#openings');
 }
 
 set_flash('application', 'Your application has been submitted successfully. We will review your profile and get in touch if there is a match.');

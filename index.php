@@ -267,10 +267,21 @@ require __DIR__ . '/includes/header.php';
                     return;
                 }
 
+                imageNode.onerror = null;
+                imageNode.onload = null;
+                imageNode.removeAttribute('src');
+                imageNode.alt = alt || '';
+
+                if (!src) {
+                    imageNode.classList.add('is-hidden');
+                    fallbackNode.hidden = false;
+                    fallbackNode.setAttribute('aria-hidden', 'false');
+                    return;
+                }
+
                 imageNode.classList.remove('is-hidden');
                 fallbackNode.hidden = true;
                 fallbackNode.setAttribute('aria-hidden', 'true');
-                imageNode.alt = alt || '';
 
                 imageNode.onerror = function () {
                     imageNode.classList.add('is-hidden');
