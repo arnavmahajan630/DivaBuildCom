@@ -63,6 +63,11 @@ $featuredProjects = [
                 'title' => 'Office Floor Plate',
                 'caption' => 'Circular office floor plate organized around a centralized service core and perimeter work zones.',
             ],
+            [
+                'image' => site_url('resources/ProjectViewDetails/6.png'),
+                'title' => 'Executive Suite Layout',
+                'caption' => 'A compact executive suite configuration with clearly zoned meeting, support, and workspace functions around the main circulation spine.',
+            ],
         ],
         'units' => [
             ['type' => 'Executive Suite', 'size' => '2,500 - 4,000 sq.ft.'],
@@ -99,11 +104,6 @@ $featuredProjects = [
                 'image' => site_url('resources/ProjectViewDetails/4.png'),
                 'title' => 'Typical Tower Floor',
                 'caption' => 'A balanced residential floor plate centered around the lift core with evenly distributed corner and mid-bay apartments.',
-            ],
-            [
-                'image' => site_url('resources/ProjectViewDetails/6.png'),
-                'title' => '2BHK Layout',
-                'caption' => 'A compact plan with clear public-private zoning, twin bedroom wings, and an efficient central living space.',
             ],
         ],
         'units' => [
