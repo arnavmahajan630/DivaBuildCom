@@ -271,6 +271,7 @@ require __DIR__ . '/includes/header.php';
 
                 project.plans.forEach(function (item, index) {
                     var button = createNode('button', 'pd-thumb' + (index === selectedIndex ? ' is-active' : ''));
+                    var thumbPreview = createNode('span', 'pd-thumb-preview');
                     var thumbImage = createNode('img', 'pd-thumb-image');
                     var thumbBody = createNode('span', 'pd-thumb-body');
                     var thumbTitle = createNode('span', 'pd-thumb-title', item.title);
@@ -285,9 +286,10 @@ require __DIR__ . '/includes/header.php';
                     thumbImage.src = item.image;
                     thumbImage.alt = item.title;
 
+                    thumbPreview.appendChild(thumbImage);
                     thumbBody.appendChild(thumbTitle);
                     thumbBody.appendChild(thumbCaption);
-                    button.appendChild(thumbImage);
+                    button.appendChild(thumbPreview);
                     button.appendChild(thumbBody);
                     thumbs.appendChild(button);
                 });
